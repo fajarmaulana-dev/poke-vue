@@ -10,7 +10,7 @@
   "scripts": {
     "check": "if [ \"$CI\" != \"true\" ]; then check-node-version --node \">=20\"; fi",
     "dev": "npm run check && vite --host",
-    "build": "npm run check && tsc -b && vite build",
+    "build": "npm run check && vue-tsc -b && vite build",
     "build:analyze": "npm run check && vite build --mode analyze",
     "lint": "npm run check && eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run check && eslint . --ext ts,tsx --fix",
@@ -38,6 +38,7 @@
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.8.1",
     "check-node-version": "^4.2.1",
+    "esbuild": "^0.28.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
