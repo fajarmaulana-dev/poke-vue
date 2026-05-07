@@ -1,0 +1,33 @@
+export const POKEMON_TYPES = [
+  'grass',
+  'poison',
+  'fire',
+  'flying',
+  'water',
+  'bug',
+  'electric',
+  'fairy',
+  'ground',
+  'rock',
+  'normal',
+  'psychic',
+  'steel',
+  'dragon',
+  'fighting',
+  'dark',
+  'ghost',
+  'ice',
+]
+
+export const POKEMON_REGIONS = [
+  'kanto',
+  'johto',
+  'hoenn',
+  'sinnoh',
+  'unova',
+  'kalos',
+  'alola',
+  'galar',
+  'hisui',
+  'paldea',
+]

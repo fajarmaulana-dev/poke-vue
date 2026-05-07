@@ -1,0 +1,29 @@
+<script setup lang="ts">
+import type { Type } from './types'
+
+const { id = '0', size = 260 } = defineProps<Type>()
+</script>
+
+<template>
+  <svg xmlns="http://www.w3.org/2000/svg" :width="size" :size="size" viewBox="0 0 204 204" fill="none">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      :fill="`url(#paint0_linear_1441_16987-${id})`"
+      d="M203.999 101.988C203.999 158.321 158.332 203.988 101.999 203.988C45.6668 203.988 0 158.321 0 101.988C0 45.6555 45.6668 -0.0112305 101.999 -0.0112305C158.332 -0.0112305 203.999 45.6555 203.999 101.988ZM160.285 101.988C160.285 134.178 134.19 160.273 101.999 160.273C69.8094 160.273 43.7143 134.178 43.7143 101.988C43.7143 69.7981 69.8094 43.703 101.999 43.703C134.19 43.703 160.285 69.7981 160.285 101.988Z"
+    />
+    <defs>
+      <linearGradient
+        :id="`paint0_linear_1441_16987-${id}`"
+        x1="0.216754"
+        y1="-0.013916"
+        x2="103.515"
+        y2="246.043"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="white" />
+        <stop offset="1" stop-color="white" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+  </svg>
+</template>

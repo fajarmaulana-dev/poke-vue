@@ -1,0 +1,9 @@
+npx check-node-version --node ">=20" || exit 1
+
+echo "✅ Node.js version OK ($(node -v))"
+
+npm run lint
+
+echo "✅ LGTM 👌, ready to build ..."
+
+npm run build

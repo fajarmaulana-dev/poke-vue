@@ -1,0 +1,320 @@
+@import 'tailwindcss';
+@custom-variant hover (&:hover);
+
+@theme {
+  --color-grass-0: #EDF6EC;
+  --color-grass-1: #63BC5A;
+  --color-poison-0: #F5EDF8;
+  --color-poison-1: #B567CE;
+  --color-fire-0: #FCF3EB;
+  --color-fire-1: #FF9D55;
+  --color-flying-0: #F1F4FA;
+  --color-flying-1: #89AAE3;
+  --color-water-0: #EBF1F8;
+  --color-water-1: #5090D6;
+  --color-bug-0: #F1F6E8;
+  --color-bug-1: #91C12F;
+  --color-electric-0: #FBF8E9;
+  --color-electric-1: #E3C12B;
+  --color-fairy-0: #FBF1FA;
+  --color-fairy-1: #EC8FE6;
+  --color-ground-0: #F9EFEA;
+  --color-ground-1: #D97845;
+  --color-rock-0: #F7F5F1;
+  --color-rock-1: #C5B78C;
+  --color-normal-0: #F1F2F3;
+  --color-normal-1: #919AA2;
+  --color-psychic-0: #FCEEEF;
+  --color-psychic-1: #FA7179;
+  --color-steel-0: #ECF1F3;
+  --color-steel-1: #5A8EA2;
+  --color-dragon-0: #E4EEF6;
+  --color-dragon-1: #0B6DC3;
+  --color-fighting-0: #F8E9EE;
+  --color-fighting-1: #CE416B;
+  --color-dark-0: #ECEBED;
+  --color-dark-1: #5A5465;
+  --color-ghost-0: #EBEDF4;
+  --color-ghost-1: #5269AD;
+  --color-ice-0: #F1FBF9;
+  --color-ice-1: #73CEC0;
+  --color-fill-0: #FF7596;
+  --color-fill-1: #CD3131;
+  --color-stroke-0: #5D78C0;
+  --color-stroke-1: #2551C3;
+  --color-stroke-2: #173EA5;
+
+  /* Spacing (padding & gap) */
+  --spacing-mobile: calc(0.8rem + 1.5vw);
+  --spacing-desktop: calc(1rem + 3vw);
+
+  /* Font Size */
+  --text-xx: 10px;
+
+  /* Box Shadows */
+  --shadow-blur-y-1: 0px 1px 10px 1px var(--tw-shadow-color);
+  --shadow-blur-y-inv-1: 0px -1px 10px 1px var(--tw-shadow-color);
+  --shadow-blur-4: 0px 0px 4px 1px var(--tw-shadow-color);
+  --shadow-blur-10: 0px 0px 10px 2px var(--tw-shadow-color);
+
+  /* Border */
+  --border-width-rem: 0.1rem;
+  --radius-half: 50%;
+
+  /* Height */
+  --height-menu-mobile: calc(100% - 64px);
+  --height-menu-desktop: calc(100% - 80px);
+
+  /* Screens (breakpoints) */
+  --breakpoint-xs: 412px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 840px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-gx: 1260px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 1600px;
+}
+
+
+* {
+  font-family: 'Poppins', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ease {
+  transition-timing-function: ease;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.poke-cards::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.poke-cards::-webkit-scrollbar-track {
+    background-color: transparent;
+    margin-bottom: 14px;
+}
+
+.poke-cards::-webkit-scrollbar-thumb {
+    background-color: rgb(254, 205, 211);
+}
+
+.poke-cards::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(253, 164, 175);
+}
+
+:root {
+  color-scheme: only light;
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  height: 100%;
+}
+
+button,
+a,
+label {
+  user-select: none;
+  cursor: pointer;
+}
+
+button:disabled,
+a:disabled,
+label:disabled {
+  cursor: default;
+}
+
+button *,
+a * {
+  pointer-events: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #cdefff3f inset !important;
+  -webkit-text-fill-color: inherit !important;
+  border-radius: inherit !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+img[alt="not-found-main"] {
+  display: none;
+}
+
+.desc-404 {
+  display: none;
+}
+
+@media screen and (min-height: 520px) {
+  .desc-404 {
+    display: block;
+  }
+}
+
+@media screen and (min-height: 720px) {
+  img[alt="not-found-main"] {
+    display: block;
+  }
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(100%); }
+}
+
+@keyframes slide-to-left {
+  to { transform: translateX(-100%); }
+}
+
+@keyframes slide-from-left {
+  from { transform: translateX(-100%); }
+}
+
+@keyframes slide-to-right {
+  to { transform: translateX(100%); }
+}
+
+@keyframes slide-from-top {
+  from { transform: translateY(-100%); }
+}
+
+@keyframes slide-to-top {
+  to { transform: translateY(-100%); }
+}
+
+@keyframes slide-from-bottom {
+  from { transform: translateY(100%); }
+}
+
+@keyframes slide-to-bottom {
+  to { transform: translateY(100%); }
+}
+
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    mix-blend-mode: normal !important;
+  }
+
+  ::view-transition-group(layout-content) {
+    overflow: hidden;
+  }
+
+  ::view-transition-group(layout-footer) {
+    z-index: 100;
+  }
+
+  /* Content always slides */
+  ::view-transition-old(layout-content) {
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+    mix-blend-mode: normal !important;
+  }
+
+  ::view-transition-new(layout-content) {
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+    mix-blend-mode: normal !important;
+  }
+
+  /* Footer ONLY slides when moving to a different layout */
+  html:not(.layout-persist) ::view-transition-old(layout-footer) {
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+    mix-blend-mode: normal !important;
+  }
+
+  html:not(.layout-persist) ::view-transition-new(layout-footer) {
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+    mix-blend-mode: normal !important;
+  }
+
+  /* Back navigation overrides */
+  html.back-transition::view-transition-old(layout-content) {
+    animation-name: slide-to-right;
+  }
+
+  html.back-transition::view-transition-new(layout-content) {
+    animation-name: slide-from-left;
+  }
+
+  html.back-transition:not(.layout-persist) ::view-transition-old(layout-footer) {
+    animation-name: slide-to-right;
+  }
+
+  html.back-transition:not(.layout-persist) ::view-transition-new(layout-footer) {
+    animation-name: slide-from-left;
+  }
+
+  @media (min-width: 840px) {
+    ::view-transition-old(layout-content) {
+      animation-name: slide-to-top;
+    }
+
+    ::view-transition-new(layout-content) {
+      animation-name: slide-from-bottom;
+    }
+
+    html:not(.layout-persist) ::view-transition-old(layout-footer) {
+      animation-name: slide-to-top;
+    }
+
+    html:not(.layout-persist) ::view-transition-new(layout-footer) {
+      animation-name: slide-from-bottom;
+    }
+
+    html.back-transition::view-transition-old(layout-content) {
+      animation-name: slide-to-bottom;
+    }
+
+    html.back-transition::view-transition-new(layout-content) {
+      animation-name: slide-from-top;
+    }
+
+    html.back-transition:not(.layout-persist) ::view-transition-old(layout-footer) {
+      animation-name: slide-to-bottom;
+    }
+
+    html.back-transition:not(.layout-persist) ::view-transition-new(layout-footer) {
+      animation-name: slide-from-top;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(layout-content),
+    ::view-transition-new(layout-content),
+    ::view-transition-old(layout-footer),
+    ::view-transition-new(layout-footer) {
+      animation-duration: 0.1ms !important;
+      animation-delay: 0s !important;
+    }
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}

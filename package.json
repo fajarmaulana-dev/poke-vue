@@ -1,0 +1,61 @@
+{
+  "name": "poke-vue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "check": "if [ \"$CI\" != \"true\" ]; then check-node-version --node \">=20\"; fi",
+    "dev": "npm run check && vite --host",
+    "build": "npm run check && tsc -b && vite build",
+    "build:analyze": "npm run check && vite build --mode analyze",
+    "lint": "npm run check && eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "npm run check && eslint . --ext ts,tsx --fix",
+    "preview": "npm run check && vite preview",
+    "format": "npm run check && prettier --write \"**/*.{ts,tsx,js,jsx,css,scss,yaml,yml,json}\"",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@fontsource/poppins": "^5.2.7",
+    "@iconoir/vue": "^7.11.0",
+    "husky": "^9.1.7",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@tsconfig/node24": "^24.0.3",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/tsconfig": "^0.8.1",
+    "check-node-version": "^4.2.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "eslint-plugin-vue": "^10.6.2",
+    "jiti": "^2.6.1",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "3.7.4",
+    "prettier-plugin-classnames": "^0.8.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "vite": "npm:rolldown-vite@latest",
+    "vite-plugin-pages": "^0.33.2",
+    "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vue-eslint-parser": "^10.2.0",
+    "vue-tsc": "^3.2.1"
+  }
+}
