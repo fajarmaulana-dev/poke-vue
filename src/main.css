@@ -2,47 +2,47 @@
 @custom-variant hover (&:hover);
 
 @theme {
-  --color-grass-0: #EDF6EC;
-  --color-grass-1: #63BC5A;
-  --color-poison-0: #F5EDF8;
-  --color-poison-1: #B567CE;
-  --color-fire-0: #FCF3EB;
-  --color-fire-1: #FF9D55;
-  --color-flying-0: #F1F4FA;
-  --color-flying-1: #89AAE3;
-  --color-water-0: #EBF1F8;
-  --color-water-1: #5090D6;
-  --color-bug-0: #F1F6E8;
-  --color-bug-1: #91C12F;
-  --color-electric-0: #FBF8E9;
-  --color-electric-1: #E3C12B;
-  --color-fairy-0: #FBF1FA;
-  --color-fairy-1: #EC8FE6;
-  --color-ground-0: #F9EFEA;
-  --color-ground-1: #D97845;
-  --color-rock-0: #F7F5F1;
-  --color-rock-1: #C5B78C;
-  --color-normal-0: #F1F2F3;
-  --color-normal-1: #919AA2;
-  --color-psychic-0: #FCEEEF;
-  --color-psychic-1: #FA7179;
-  --color-steel-0: #ECF1F3;
-  --color-steel-1: #5A8EA2;
-  --color-dragon-0: #E4EEF6;
-  --color-dragon-1: #0B6DC3;
-  --color-fighting-0: #F8E9EE;
-  --color-fighting-1: #CE416B;
-  --color-dark-0: #ECEBED;
-  --color-dark-1: #5A5465;
-  --color-ghost-0: #EBEDF4;
-  --color-ghost-1: #5269AD;
-  --color-ice-0: #F1FBF9;
-  --color-ice-1: #73CEC0;
-  --color-fill-0: #FF7596;
-  --color-fill-1: #CD3131;
-  --color-stroke-0: #5D78C0;
-  --color-stroke-1: #2551C3;
-  --color-stroke-2: #173EA5;
+  --color-grass-0: #edf6ec;
+  --color-grass-1: #63bc5a;
+  --color-poison-0: #f5edf8;
+  --color-poison-1: #b567ce;
+  --color-fire-0: #fcf3eb;
+  --color-fire-1: #ff9d55;
+  --color-flying-0: #f1f4fa;
+  --color-flying-1: #89aae3;
+  --color-water-0: #ebf1f8;
+  --color-water-1: #5090d6;
+  --color-bug-0: #f1f6e8;
+  --color-bug-1: #91c12f;
+  --color-electric-0: #fbf8e9;
+  --color-electric-1: #e3c12b;
+  --color-fairy-0: #fbf1fa;
+  --color-fairy-1: #ec8fe6;
+  --color-ground-0: #f9efea;
+  --color-ground-1: #d97845;
+  --color-rock-0: #f7f5f1;
+  --color-rock-1: #c5b78c;
+  --color-normal-0: #f1f2f3;
+  --color-normal-1: #919aa2;
+  --color-psychic-0: #fceeef;
+  --color-psychic-1: #fa7179;
+  --color-steel-0: #ecf1f3;
+  --color-steel-1: #5a8ea2;
+  --color-dragon-0: #e4eef6;
+  --color-dragon-1: #0b6dc3;
+  --color-fighting-0: #f8e9ee;
+  --color-fighting-1: #ce416b;
+  --color-dark-0: #ecebed;
+  --color-dark-1: #5a5465;
+  --color-ghost-0: #ebedf4;
+  --color-ghost-1: #5269ad;
+  --color-ice-0: #f1fbf9;
+  --color-ice-1: #73cec0;
+  --color-fill-0: #ff7596;
+  --color-fill-1: #cd3131;
+  --color-stroke-0: #5d78c0;
+  --color-stroke-1: #2551c3;
+  --color-stroke-2: #173ea5;
 
   /* Spacing (padding & gap) */
   --spacing-mobile: calc(0.8rem + 1.5vw);
@@ -75,7 +75,6 @@
   --breakpoint-2xl: 1600px;
 }
 
-
 * {
   font-family: 'Poppins', sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -90,21 +89,21 @@
 }
 
 .poke-cards::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+  width: 10px;
+  height: 10px;
 }
 
 .poke-cards::-webkit-scrollbar-track {
-    background-color: transparent;
-    margin-bottom: 14px;
+  background-color: transparent;
+  margin-bottom: 14px;
 }
 
 .poke-cards::-webkit-scrollbar-thumb {
-    background-color: rgb(254, 205, 211);
+  background-color: rgb(254, 205, 211);
 }
 
 .poke-cards::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(253, 164, 175);
+  background-color: rgb(253, 164, 175);
 }
 
 :root {
@@ -160,7 +159,7 @@ input:-webkit-autofill {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-img[alt="not-found-main"] {
+img[alt='not-found-main'] {
   display: none;
 }
 
@@ -175,41 +174,57 @@ img[alt="not-found-main"] {
 }
 
 @media screen and (min-height: 720px) {
-  img[alt="not-found-main"] {
+  img[alt='not-found-main'] {
     display: block;
   }
 }
 
 @keyframes slide-from-right {
-  from { transform: translateX(100%); }
+  from {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes slide-to-left {
-  to { transform: translateX(-100%); }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes slide-from-left {
-  from { transform: translateX(-100%); }
+  from {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes slide-to-right {
-  to { transform: translateX(100%); }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes slide-from-top {
-  from { transform: translateY(-100%); }
+  from {
+    transform: translateY(-100%);
+  }
 }
 
 @keyframes slide-to-top {
-  to { transform: translateY(-100%); }
+  to {
+    transform: translateY(-100%);
+  }
 }
 
 @keyframes slide-from-bottom {
-  from { transform: translateY(100%); }
+  from {
+    transform: translateY(100%);
+  }
 }
 
 @keyframes slide-to-bottom {
-  to { transform: translateY(100%); }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 @supports (view-transition-name: none) {
@@ -312,9 +327,13 @@ img[alt="not-found-main"] {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
 }
 
 @keyframes fade-out {
-  to { opacity: 0; }
+  to {
+    opacity: 0;
+  }
 }

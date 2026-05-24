@@ -1,8 +1,9 @@
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
 import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+import { MOBILE_BOUND } from '@/constants'
 import { POKE_FETCH_LIMIT } from '@/constants/env'
 import { POKEMON_REGIONS, POKEMON_TYPES } from '@/constants/pokemon'
 import { useDebounceFunc } from '@/hooks/debounce'
@@ -16,9 +17,9 @@ import {
   useFetchPokemonType,
 } from '@/services/pokemon'
 import { usePokemonStore } from '@/stores/pokemon'
-import { clickById, getByAny } from '@/utils/general'
+import { blurById, clickById } from '@/utils/general'
 
-import { ERROR_TOAST_ID, POKE_CARD_FETCH_LIMIT } from '../config'
+import { ERROR_TOAST_ID, FILTER_OPTIONS, POKE_CARD_FETCH_LIMIT, SORT_OPTIONS } from '../config'
 import type { Pokemon, PokemonFilterProps } from '../types'
 
 export const usePokemon = () => {
@@ -38,6 +39,7 @@ export const usePokemon = () => {
   const isLoading = ref(true)
   const isLoadingFilter = ref(false)
   const loadingFor = ref<PokemonFilterProps['loadingFor']>('search_p')
+  const loadingMoreFor = ref<PokemonFilterProps['prefix'] | null>(null)
   const isLastData = ref({
     p: false,
     f: false,
@@ -63,6 +65,26 @@ export const usePokemon = () => {
     type_c: 'semua-tipe',
     order_c: 'no-1-n',
   })
+
+  const localFilter = ref({ ...query.value })
+
+  watch(
+    query,
+    newQuery => {
+      Object.assign(localFilter.value, newQuery)
+    },
+    { deep: true },
+  )
+
+  const debouncedUpdateQuery = useDebounceFunc(updateQuery, 750)
+
+  const updateFilter = (newFilter: Record<string, string>) => {
+    Object.assign(localFilter.value, newFilter)
+    const isSearch = Object.keys(newFilter).some(key => key.startsWith('search_'))
+
+    if (isSearch) return debouncedUpdateQuery(newFilter)
+    updateQuery(newFilter)
+  }
 
   const idFromUrl = (url: string) => url.split('/').slice(-2, -1)[0]
 
@@ -145,7 +167,7 @@ export const usePokemon = () => {
   }
 
   const fetchFilteredData = async (prefix: PokemonFilterProps['prefix']) => {
-    getByAny('.poke-cards').scrollTo({ top: 0 })
+    document.querySelectorAll(`.poke-cards-${prefix}`).forEach(el => el.scrollTo({ top: 0 }))
     isLastData.value[prefix] = false
     isLoadingFilter.value = true
     const sortedMaster = getProcessedMasterData(prefix)
@@ -160,30 +182,35 @@ export const usePokemon = () => {
 
   const loadMoreData = async (prefix: PokemonFilterProps['prefix']) => {
     if (isLoadingFilter.value || isLoadingPokemon.value || isLastData.value[prefix]) return
-    const sortedMaster = getProcessedMasterData(prefix)
+    loadingMoreFor.value = prefix
+    try {
+      const sortedMaster = getProcessedMasterData(prefix)
 
-    const currentList = prefix === 'p' ? pokemons.value : prefix === 'f' ? favourites.value : catches.value
-    const lastPokemon = currentList[currentList.length - 1]
-    if (!lastPokemon) return
+      const currentList = prefix === 'p' ? pokemons.value : prefix === 'f' ? favourites.value : catches.value
+      const lastPokemon = currentList[currentList.length - 1]
+      if (!lastPokemon) return
 
-    const currentIdx = sortedMaster.findIndex(p => p.id === lastPokemon.id)
+      const currentIdx = sortedMaster.findIndex(p => p.id === lastPokemon.id)
 
-    if (currentIdx === -1 || currentIdx >= sortedMaster.length - 1) {
-      isLastData.value[prefix] = true
-      return
+      if (currentIdx === -1 || currentIdx >= sortedMaster.length - 1) {
+        isLastData.value[prefix] = true
+        return
+      }
+
+      const nextOffset = currentIdx + 1
+      const newDetails = await getUntilLimit(sortedMaster, nextOffset, [])
+
+      if (newDetails.length === 0) {
+        isLastData.value[prefix] = true
+        return
+      }
+
+      if (prefix === 'p') pokemons.value = [...pokemons.value, ...newDetails]
+      if (prefix === 'f') favourites.value = [...favourites.value, ...newDetails]
+      if (prefix === 'c') catches.value = [...catches.value, ...newDetails]
+    } finally {
+      loadingMoreFor.value = null
     }
-
-    const nextOffset = currentIdx + 1
-    const newDetails = await getUntilLimit(sortedMaster, nextOffset, [])
-
-    if (newDetails.length === 0) {
-      isLastData.value[prefix] = true
-      return
-    }
-
-    if (prefix === 'p') pokemons.value = [...pokemons.value, ...newDetails]
-    if (prefix === 'f') favourites.value = [...favourites.value, ...newDetails]
-    if (prefix === 'c') catches.value = [...catches.value, ...newDetails]
   }
 
   const initData = async () => {
@@ -248,7 +275,6 @@ export const usePokemon = () => {
     fetchFilteredData('f')
   }
 
-  const debouncedFetch = useDebounceFunc(fetchFilteredData, 750)
   watch(
     () => [
       query.value.search_p,
@@ -265,13 +291,8 @@ export const usePokemon = () => {
     (newValues, oldValues) => {
       const changedIndex = newValues.findIndex((val, i) => val !== oldValues[i])
       if (changedIndex < 0) return
-      const isSearchTrigger = [0, 4, 7].includes(changedIndex)
       const prefix = changedIndex <= 3 ? 'p' : changedIndex <= 6 ? 'f' : 'c'
       loadingFor.value = Object.keys(query.value)[changedIndex] as PokemonFilterProps['loadingFor']
-      if (isSearchTrigger) {
-        debouncedFetch(prefix)
-        return
-      }
       fetchFilteredData(prefix)
     },
   )
@@ -294,6 +315,54 @@ export const usePokemon = () => {
     { immediate: true },
   )
 
+  const router = useRouter()
+
+  const isFavorite = (id: string) => !!pokemonStore.favorites.find(f => f.id === id)
+
+  const currentPagePosition = computed(() => {
+    const page = route.query.page as string
+    if (page === 'wilayah') return '-translate-x-full'
+    if (['pokedex', 'favorit'].includes(page)) return '-translate-x-[200%]'
+    return 'translate-x-0'
+  })
+
+  const currentHeaderPosition = computed(() => {
+    const page = route.query.page as string
+    if (page === 'wilayah') return 'translate-x-full'
+    if (['pokedex', 'favorit'].includes(page)) return 'translate-x-[200%]'
+    return 'translate-x-0'
+  })
+
+  const currentProfilePosition = computed(() => {
+    const isProfile = route.query.is_profile as string
+    const page = route.query.page as string
+    if (page === 'wilayah')
+      return isProfile ? 'translate-x-full sm:translate-x-0' : 'translate-x-[200%] sm:translate-x-full'
+    if (['pokedex', 'favorit'].includes(page))
+      return isProfile ? 'translate-x-[200%] sm:translate-x-0' : 'translate-x-[300%] sm:translate-x-full'
+    return isProfile ? 'translate-x-0' : 'translate-x-full'
+  })
+
+  const REGIONS = ['Semua Wilayah', ...POKEMON_REGIONS]
+  const selectedMainType = computed(() => localFilter.value.type_p?.toString() || FILTER_OPTIONS[0].value)
+  const selectedMainOrder = computed(() => localFilter.value.order_p?.toString() || SORT_OPTIONS[0].value)
+  const selectedRegion = computed(() => localFilter.value.region_p?.toString() || REGIONS[0])
+  const selectedFavouriteType = computed(() => localFilter.value.type_f?.toString() || FILTER_OPTIONS[0].value)
+  const selectedFavouriteOrder = computed(() => localFilter.value.order_f?.toString() || SORT_OPTIONS[0].value)
+  const selectedCatchedType = computed(() => localFilter.value.type_c?.toString() || FILTER_OPTIONS[0].value)
+  const selectedCatchedOrder = computed(() => localFilter.value.order_c?.toString() || SORT_OPTIONS[0].value)
+
+  const handleSelectFilter = (type: PokemonFilterProps['loadingFor'], e: Event | { value: string }) => {
+    const target = e instanceof Event ? (e.target as HTMLInputElement) : e
+    updateFilter({ [type]: target.value })
+  }
+
+  const handleFilterEnter = () => {
+    if (window.innerWidth >= MOBILE_BOUND) return
+    blurById('search-p')
+    router.replace({ path: '/', query: { ...route.query, filter: undefined } })
+  }
+
   onMounted(() => {
     initData()
   })
@@ -305,13 +374,28 @@ export const usePokemon = () => {
     isLoading,
     isLoadingFilter,
     loadingFor,
-    currentFilter: query,
+    loadingMoreFor,
+    currentFilter: localFilter,
     isLoadingMore: isLoadingPokemon,
     isLastData,
-    updateFilter: updateQuery,
+    updateFilter,
     loadMoreData,
     addToFavorite,
     removeFromFavorite,
     allFavorites: storeToRefs(pokemonStore).favorites,
+    isFavorite,
+    currentPagePosition,
+    currentHeaderPosition,
+    currentProfilePosition,
+    REGIONS,
+    selectedMainType,
+    selectedMainOrder,
+    selectedRegion,
+    selectedFavouriteType,
+    selectedFavouriteOrder,
+    selectedCatchedType,
+    selectedCatchedOrder,
+    handleSelectFilter,
+    handleFilterEnter,
   }
 }

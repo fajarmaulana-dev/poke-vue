@@ -3,6 +3,7 @@ import { computed } from '@vue/reactivity'
 import { useRoute, useRouter } from 'vue-router'
 
 import { FOOTER_MENUS } from '@/constants/layout'
+import { focusById } from '@/utils/general'
 
 const { replace } = useRouter()
 const route = useRoute()
@@ -19,12 +20,12 @@ const noCenter = computed(() => (route.query.page === 'wilayah' && !route.query.
 const handleUpdateMenu = (idx: number, name: string) => {
   if (isCenter(idx)) {
     const { filter, ...query } = route.query
-    if (filter) {
-      replace({ path: '/', query })
+    if (!filter) {
+      replace({ path: '/', query: { ...query, filter: 'true' } })
+      focusById('search-p')
       return
     }
-    replace({ path: '/', query: { ...query, filter: 'true' } })
-    return
+    return replace({ path: '/', query })
   }
   replace({ path: '/', query: { page: name.toLowerCase() } })
 }

@@ -47,6 +47,7 @@ export interface PokemonFilterEmits {
   (e: 'filter', data: { e: Event; type: PokemonFilterProps['loadingFor'] }): void
   (e: 'update:typeValue', value?: SelectOption['value']): void
   (e: 'update:orderValue', value?: SelectOption['value']): void
+  (e: 'enter', data: { e: KeyboardEvent }): void
 }
 
 export interface PokemonCardEmits {

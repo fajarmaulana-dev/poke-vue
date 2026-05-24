@@ -37,6 +37,18 @@ export const focusById = (id: string) => {
 }
 
 /**
+ * Focus an element by its ID.
+ *
+ * @param id - The ID of the element to focus.
+ */
+export const blurById = (id: string) => {
+  const el = getById(id)
+  if (el) {
+    el.blur()
+  }
+}
+
+/**
  * Smoothly scrolls the window to an element's position when click on active Link.
  *
  * @param hash - Hash of the link.

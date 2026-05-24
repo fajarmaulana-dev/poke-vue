@@ -13,12 +13,13 @@ const emit = defineEmits<PokemonFilterEmits>()
 <template>
   <div class="flex items-center justify-between gap-4 flex-wrap pb-4">
     <FormInput
-      :id="`search-${prefix}-${suffix || ''}`"
+      :id="`search-${prefix}${suffix ? `-${suffix}` : ''}`"
       placeholder="Cari pokemon disini ..."
       class="[&_button]:pointer-events-none grow basis-56"
       :class="{ 'gx:max-w-98': prefix === 'p' }"
       :is-loading="isLoading && loadingFor === `search_${prefix}`"
       :model-value="searchValue"
+      @keydown.enter="e => emit('enter', { e })"
       @input="e => emit('filter', { e, type: `search_${prefix}` })"
     >
       <template #prefix>
