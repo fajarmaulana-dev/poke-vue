@@ -3,10 +3,7 @@ import { LogOut } from '@iconoir/vue'
 import { provide } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
 
-import { Toast } from '@/components/common'
-import { EStatus } from '@/types/enum'
-
-import { ERROR_TOAST_ID } from '../config'
+import { POKEMON_CONTEXT } from '../config'
 import { usePokemon } from '../hooks/use-pokemon'
 import Favorite from './favorite.vue'
 import Pokemon from './pokemon.vue'
@@ -16,10 +13,10 @@ import SavedPokemon from './saved-pokemon.vue'
 const route = useRoute()
 const router = useRouter()
 
-const context = usePokemon()
-provide('pokemonContext', context)
+const pokemonContext = usePokemon()
+provide(POKEMON_CONTEXT, pokemonContext)
 
-const { currentPagePosition, currentHeaderPosition } = context
+const { currentPagePosition, currentHeaderPosition } = pokemonContext
 </script>
 
 <template>
@@ -101,8 +98,5 @@ const { currentPagePosition, currentHeaderPosition } = context
         <Profile />
       </div>
     </div>
-    <Toast :id="ERROR_TOAST_ID" :type="EStatus.Error">
-      Gagal mengambil data Pokemon. Silakan periksa koneksi internet Anda atau coba lagi nanti.
-    </Toast>
   </div>
 </template>

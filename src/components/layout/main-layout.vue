@@ -3,8 +3,14 @@ import { computed } from '@vue/reactivity'
 import { useRoute, useRouter } from 'vue-router'
 
 import { FOOTER_MENUS } from '@/constants/layout'
-import { focusById } from '@/utils/general'
+import { ERROR_TOAST_ID, FAVORITE_PANE_ID } from '@/features/main/config'
+import { usePokemonStore } from '@/stores/pokemon'
+import { EStatus } from '@/types/enum'
+import { clickById, focusById } from '@/utils/general'
 
+import { Pane, Toast } from '../common'
+
+const pokemonStore = usePokemonStore()
 const { replace } = useRouter()
 const route = useRoute()
 
@@ -28,6 +34,13 @@ const handleUpdateMenu = (idx: number, name: string) => {
     return replace({ path: '/', query })
   }
   replace({ path: '/', query: { page: name.toLowerCase() } })
+}
+
+const removeFromFavorites = () => {
+  const f = pokemonStore.favorite
+  if (!f) return
+  pokemonStore.removeFromFavorites(f.id)
+  clickById(FAVORITE_PANE_ID)
 }
 </script>
 
@@ -86,5 +99,33 @@ const handleUpdateMenu = (idx: number, name: string) => {
     <div class="flex-1 overflow-hidden" style="view-transition-name: layout-content">
       <router-view />
     </div>
+    <Toast :id="ERROR_TOAST_ID" :type="EStatus.Error">
+      Gagal mengambil data Pokemon. Silakan periksa koneksi internet Anda atau coba lagi nanti.
+    </Toast>
+    <Pane :id="FAVORITE_PANE_ID" class="sm:max-w-sm">
+      <div class="w-full p-4">
+        <p class="text-center sm:text-left text-slate-800 font-medium">
+          Apakah kamu yakin ingin menghapus
+          <span class="font-bold capitalize">{{ pokemonStore.favorite?.name }}</span> dari Favorit ?
+        </p>
+        <div class="flex items-center gap-2.5 mt-4 sm:flex-row-reverse flex-wrap">
+          <button
+            class="bg-slate-200/80 hover:bg-slate-200 active:bg-slate-300 text-slate-800 px-5 py-3 grid
+              place-items-center font-semibold text-center transition duration-300 cursor-pointer rounded-lg basis-31
+              grow sm:grow-0"
+            @click="() => clickById(FAVORITE_PANE_ID)"
+          >
+            Batalkan
+          </button>
+          <button
+            class="px-5 py-3 grid place-items-center font-semibold text-center transition duration-300 cursor-pointer
+              rounded-lg bg-fill-1/80 hover:bg-fill-1/90 active:bg-fill-1 text-white basis-31 grow sm:grow-0"
+            @click="removeFromFavorites"
+          >
+            Ya, Hapus
+          </button>
+        </div>
+      </div>
+    </Pane>
   </main>
 </template>

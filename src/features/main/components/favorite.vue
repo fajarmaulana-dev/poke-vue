@@ -7,6 +7,7 @@ import { DotsSpinner } from '@/assets/spinner'
 import CircleSpinner from '@/assets/spinner/circle-spinner.vue'
 import { useIntersectionObserver } from '@/hooks/intersection-observer'
 
+import { POKEMON_CONTEXT } from '../config'
 import type { usePokemon } from '../hooks/use-pokemon'
 import PokemonCard from './pokemon-card.vue'
 import PokemonFilter from './pokemon-filter.vue'
@@ -14,7 +15,7 @@ import PokemonFilter from './pokemon-filter.vue'
 const route = useRoute()
 
 const {
-  favourites,
+  favorites,
   isLoading,
   isLoadingMore,
   isLoadingFilter,
@@ -23,15 +24,15 @@ const {
   isLastData,
   currentFilter,
   loadMoreData,
-  removeFromFavorite,
-  selectedFavouriteType,
-  selectedFavouriteOrder,
+  toggleFavorite,
+  selectedFavoriteType,
+  selectedFavoriteOrder,
   handleSelectFilter,
-} = inject('pokemonContext') as ReturnType<typeof usePokemon>
+} = inject(POKEMON_CONTEXT) as ReturnType<typeof usePokemon>
 
-const loadMoreFavourite = ref<HTMLDivElement>()
+const loadMoreFavorite = ref<HTMLDivElement>()
 
-useIntersectionObserver(loadMoreFavourite, () => {
+useIntersectionObserver(loadMoreFavorite, () => {
   if (isLoading.value || isLoadingFilter.value) return
   loadMoreData('f')
 })
@@ -50,8 +51,8 @@ useIntersectionObserver(loadMoreFavourite, () => {
       <div class="p-4 shadow-blur-y-1 shadow-gray-200 rounded-t-2xl hidden sm:block">
         <b class="text-lg font-bold text-slate-800 capitalize">Favorit</b>
         <PokemonFilter
-          v-model:type-value="selectedFavouriteType"
-          v-model:order-value="selectedFavouriteOrder"
+          v-model:type-value="selectedFavoriteType"
+          v-model:order-value="selectedFavoriteOrder"
           :search-value="currentFilter.search_f || ''"
           prefix="f"
           :is-loading="isLoadingFilter"
@@ -63,9 +64,9 @@ useIntersectionObserver(loadMoreFavourite, () => {
       <div
         class="overflow-y-auto poke-cards poke-cards-f mt-16 p-4 pb-18 sm:mt-0 sm:p-4! max-h-[calc(100vh-124px)]
           sm:max-h-none"
-        :class="{ 'flex-1 flex items-center justify-center': isLoading || !favourites.length }"
+        :class="{ 'flex-1 flex items-center justify-center': isLoading || !favorites.length }"
       >
-        <div v-if="isLoading || !favourites.length" class="w-full flex justify-center items-center flex-col gap-6">
+        <div v-if="isLoading || !favorites.length" class="w-full flex justify-center items-center flex-col gap-6">
           <img
             src="https://res.cloudinary.com/dxa4bdtdx/image/upload/notfound_iav02l.avif"
             alt="not-found-main"
@@ -83,19 +84,19 @@ useIntersectionObserver(loadMoreFavourite, () => {
         </div>
         <div class="flex flex-wrap md:grid md:grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-4 xs:gap-5">
           <PokemonCard
-            v-for="pokemon in favourites"
+            v-for="pokemon in favorites"
             :id="pokemon.id"
             :key="pokemon.id"
             :name="pokemon.name"
             :types="pokemon.types"
             :image="pokemon.image"
             removable
-            @remove="removeFromFavorite"
+            @remove="toggleFavorite"
           />
         </div>
         <div
-          v-show="favourites.length"
-          ref="loadMoreFavourite"
+          v-show="favorites.length"
+          ref="loadMoreFavorite"
           class="grid place-items-center w-full overflow-hidden"
           :class="isLastData['f'] ? 'h-0' : 'h-10'"
         >

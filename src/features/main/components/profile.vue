@@ -9,6 +9,7 @@ import { Switch } from '@/components/common'
 import FormInput from '@/components/common/form-input.vue'
 import FormWrapper from '@/components/common/form-wrapper.vue'
 
+import { POKEMON_CONTEXT } from '../config'
 import type { usePokemon } from '../hooks/use-pokemon'
 
 const route = useRoute()
@@ -22,7 +23,7 @@ const TABS = [
 const activeTab = ref<(typeof TABS)[number]['id']>('profile')
 const activeTabIndex = computed(() => TABS.findIndex(tab => tab.id === activeTab.value))
 
-const { currentProfilePosition } = inject('pokemonContext') as ReturnType<typeof usePokemon>
+const { currentProfilePosition } = inject(POKEMON_CONTEXT) as ReturnType<typeof usePokemon>
 </script>
 
 <template>

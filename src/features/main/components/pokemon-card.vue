@@ -7,7 +7,8 @@ import { useSlider } from '@/hooks/slider'
 import { TYPE_ICONS } from '../config'
 import type { PokemonCard, PokemonCardEmits } from '../types'
 
-defineProps<PokemonCard>()
+const props = defineProps<PokemonCard>()
+const propsWithSpreads = computed(() => ({ spreads: [], ...props }))
 const emit = defineEmits<PokemonCardEmits>()
 
 const cardRef = ref<HTMLDivElement>()
@@ -37,7 +38,7 @@ const movementStyle = computed(() => {
     <button
       class="rounded-2xl bg-rose-500 hover:bg-rose-600 active:bg-rose-700 h-full w-full transition duration-400 flex
         items-center justify-end pr-5"
-      @click="() => emit('remove', id)"
+      @click="() => emit('remove', propsWithSpreads)"
     >
       <TrashSolid class="w-6 h-auto text-white" />
     </button>
@@ -87,15 +88,15 @@ const movementStyle = computed(() => {
           <img :src="image" alt="pokemon" width="96" height="96" loading="lazy" />
         </div>
         <button
-          v-if="with_favourite"
+          v-if="with_favorite"
           class="w-8 h-8 grid place-items-center border border-white/80 rounded-full bg-white/20 backdrop-blur absolute
             group top-2 right-2"
-          @click="() => emit('favourite', id)"
+          @click="() => emit('favorite', id)"
         >
           <Heart
             class="h-auto w-4.5 **:stroke-2 **:stroke-white transition duration-400 group-hover:scale-110
               group-active:scale-90 *:transition *:duration-400"
-            :class="favourite_date ? '*:fill-fill-1' : '*:fill-transparent'"
+            :class="favorite_date ? '*:fill-fill-1' : '*:fill-transparent'"
           />
         </button>
         <i

@@ -22,6 +22,8 @@ import {
 } from '@/assets/svg'
 import { POKEMON_TYPES } from '@/constants/pokemon'
 
+export const POKEMON_CONTEXT = 'pokemon-context'
+
 export const FILTER_OPTIONS = [
   { value: 'semua-tipe', text: 'Tampilkan Semua Tipe' },
   ...POKEMON_TYPES.map(type => ({ value: type, text: `Tampilkan Tipe ${type}` })),
@@ -37,6 +39,7 @@ export const SORT_OPTIONS = [
 export const POKE_CARD_FETCH_LIMIT = 32
 
 export const ERROR_TOAST_ID = 'error-toast-id'
+export const FAVORITE_PANE_ID = 'favorite-pane-id'
 
 export const TYPE_ICONS: Record<string, { icon: Component; layer: string; bg: string; fill: string }> = {
   grass: { icon: Grass, layer: 'bg-grass-0', bg: 'bg-grass-1', fill: '*:fill-grass-1!' },

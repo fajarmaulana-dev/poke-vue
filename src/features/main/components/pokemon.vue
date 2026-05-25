@@ -9,6 +9,7 @@ import CircleSpinner from '@/assets/spinner/circle-spinner.vue'
 import { POKEMON_REGIONS } from '@/constants/pokemon'
 import { useIntersectionObserver } from '@/hooks/intersection-observer'
 
+import { POKEMON_CONTEXT } from '../config'
 import type { usePokemon } from '../hooks/use-pokemon'
 import PokemonCard from './pokemon-card.vue'
 import PokemonFilter from './pokemon-filter.vue'
@@ -25,21 +26,20 @@ const {
   isLastData,
   currentFilter,
   loadMoreData,
-  addToFavorite,
-  removeFromFavorite,
+  toggleFavorite,
   isFavorite,
   currentHeaderPosition,
   REGIONS,
   selectedMainType,
   selectedMainOrder,
   selectedRegion,
-  selectedFavouriteType,
-  selectedFavouriteOrder,
+  selectedFavoriteType,
+  selectedFavoriteOrder,
   selectedCatchedType,
   selectedCatchedOrder,
   handleSelectFilter,
   handleFilterEnter,
-} = inject('pokemonContext') as ReturnType<typeof usePokemon>
+} = inject(POKEMON_CONTEXT) as ReturnType<typeof usePokemon>
 
 const pokemonByRegion = ref<HTMLDivElement>()
 const loadMorePokemon = ref<HTMLDivElement>()
@@ -81,8 +81,8 @@ useIntersectionObserver([loadMorePokemon, loadMorePokemonByRegion], () => {
         @filter="({ e, type }) => handleSelectFilter(type, e)"
       />
       <PokemonFilter
-        v-model:type-value="selectedFavouriteType"
-        v-model:order-value="selectedFavouriteOrder"
+        v-model:type-value="selectedFavoriteType"
+        v-model:order-value="selectedFavoriteOrder"
         :search-value="currentFilter.search_f || ''"
         prefix="f"
         suffix="mobile"
@@ -149,9 +149,9 @@ useIntersectionObserver([loadMorePokemon, loadMorePokemonByRegion], () => {
           :name="pokemon.name"
           :types="pokemon.types"
           :image="pokemon.image"
-          with_favourite
-          :favourite_date="isFavorite(pokemon.id) ? 'active' : ''"
-          @favourite="() => (isFavorite(pokemon.id) ? removeFromFavorite(pokemon.id) : addToFavorite(pokemon))"
+          with_favorite
+          :favorite_date="isFavorite(pokemon.id) ? 'active' : ''"
+          @favorite="() => toggleFavorite(pokemon)"
         />
       </div>
       <div
@@ -238,9 +238,9 @@ useIntersectionObserver([loadMorePokemon, loadMorePokemonByRegion], () => {
           :name="pokemon.name"
           :types="pokemon.types"
           :image="pokemon.image"
-          with_favourite
-          :favourite_date="isFavorite(pokemon.id) ? 'active' : ''"
-          @favourite="() => (isFavorite(pokemon.id) ? removeFromFavorite(pokemon.id) : addToFavorite(pokemon))"
+          with_favorite
+          :favorite_date="isFavorite(pokemon.id) ? 'active' : ''"
+          @favorite="() => toggleFavorite(pokemon)"
         />
       </div>
       <div

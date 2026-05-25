@@ -1,6 +1,5 @@
 import { computed, ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
-import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 
 import { MOBILE_BOUND } from '@/constants'
@@ -19,7 +18,7 @@ import {
 import { usePokemonStore } from '@/stores/pokemon'
 import { blurById, clickById } from '@/utils/general'
 
-import { ERROR_TOAST_ID, FILTER_OPTIONS, POKE_CARD_FETCH_LIMIT, SORT_OPTIONS } from '../config'
+import { ERROR_TOAST_ID, FAVORITE_PANE_ID, FILTER_OPTIONS, POKE_CARD_FETCH_LIMIT, SORT_OPTIONS } from '../config'
 import type { Pokemon, PokemonFilterProps } from '../types'
 
 export const usePokemon = () => {
@@ -35,7 +34,7 @@ export const usePokemon = () => {
   const pokemonStore = usePokemonStore()
   const pokemons = ref<Pokemon[]>([])
   const catches = ref<Pokemon[]>([])
-  const favourites = ref<Pokemon[]>([])
+  const favorites = ref<Pokemon[]>([])
   const isLoading = ref(true)
   const isLoadingFilter = ref(false)
   const loadingFor = ref<PokemonFilterProps['loadingFor']>('search_p')
@@ -174,7 +173,7 @@ export const usePokemon = () => {
 
     const results = await getUntilLimit(sortedMaster, 0, [])
     if (prefix === 'p') pokemons.value = results
-    if (prefix === 'f') favourites.value = results
+    if (prefix === 'f') favorites.value = results
     if (prefix === 'c') catches.value = results
 
     isLoadingFilter.value = false
@@ -186,7 +185,7 @@ export const usePokemon = () => {
     try {
       const sortedMaster = getProcessedMasterData(prefix)
 
-      const currentList = prefix === 'p' ? pokemons.value : prefix === 'f' ? favourites.value : catches.value
+      const currentList = prefix === 'p' ? pokemons.value : prefix === 'f' ? favorites.value : catches.value
       const lastPokemon = currentList[currentList.length - 1]
       if (!lastPokemon) return
 
@@ -206,7 +205,7 @@ export const usePokemon = () => {
       }
 
       if (prefix === 'p') pokemons.value = [...pokemons.value, ...newDetails]
-      if (prefix === 'f') favourites.value = [...favourites.value, ...newDetails]
+      if (prefix === 'f') favorites.value = [...favorites.value, ...newDetails]
       if (prefix === 'c') catches.value = [...catches.value, ...newDetails]
     } finally {
       loadingMoreFor.value = null
@@ -265,14 +264,19 @@ export const usePokemon = () => {
     isLoading.value = false
   }
 
-  const addToFavorite = (pokemon: Pokemon) => {
-    pokemonStore.addToFavorite(pokemon)
+  const addToFavorites = (pokemon: Pokemon) => {
+    pokemonStore.addToFavorites(pokemon)
     fetchFilteredData('f')
   }
 
-  const removeFromFavorite = (id: string) => {
-    pokemonStore.removeFromFavorite(id)
-    fetchFilteredData('f')
+  const openRemoveFavoriteConfirmation = (pokemon: Pokemon) => {
+    pokemonStore.updateFavorite(pokemon)
+    clickById(FAVORITE_PANE_ID)
+  }
+
+  const toggleFavorite = (pokemon: Pokemon) => {
+    if (isFavorite(pokemon.id)) return openRemoveFavoriteConfirmation(pokemon)
+    if (pokemon) addToFavorites(pokemon)
   }
 
   watch(
@@ -347,8 +351,8 @@ export const usePokemon = () => {
   const selectedMainType = computed(() => localFilter.value.type_p?.toString() || FILTER_OPTIONS[0].value)
   const selectedMainOrder = computed(() => localFilter.value.order_p?.toString() || SORT_OPTIONS[0].value)
   const selectedRegion = computed(() => localFilter.value.region_p?.toString() || REGIONS[0])
-  const selectedFavouriteType = computed(() => localFilter.value.type_f?.toString() || FILTER_OPTIONS[0].value)
-  const selectedFavouriteOrder = computed(() => localFilter.value.order_f?.toString() || SORT_OPTIONS[0].value)
+  const selectedFavoriteType = computed(() => localFilter.value.type_f?.toString() || FILTER_OPTIONS[0].value)
+  const selectedFavoriteOrder = computed(() => localFilter.value.order_f?.toString() || SORT_OPTIONS[0].value)
   const selectedCatchedType = computed(() => localFilter.value.type_c?.toString() || FILTER_OPTIONS[0].value)
   const selectedCatchedOrder = computed(() => localFilter.value.order_c?.toString() || SORT_OPTIONS[0].value)
 
@@ -369,7 +373,7 @@ export const usePokemon = () => {
 
   return {
     pokemons,
-    favourites,
+    favorites,
     catches,
     isLoading,
     isLoadingFilter,
@@ -380,9 +384,7 @@ export const usePokemon = () => {
     isLastData,
     updateFilter,
     loadMoreData,
-    addToFavorite,
-    removeFromFavorite,
-    allFavorites: storeToRefs(pokemonStore).favorites,
+    addToFavorites,
     isFavorite,
     currentPagePosition,
     currentHeaderPosition,
@@ -391,11 +393,13 @@ export const usePokemon = () => {
     selectedMainType,
     selectedMainOrder,
     selectedRegion,
-    selectedFavouriteType,
-    selectedFavouriteOrder,
+    selectedFavoriteType,
+    selectedFavoriteOrder,
     selectedCatchedType,
     selectedCatchedOrder,
     handleSelectFilter,
     handleFilterEnter,
+    toggleFavorite,
+    openRemoveFavoriteConfirmation,
   }
 }

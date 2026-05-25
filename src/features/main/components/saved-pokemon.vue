@@ -8,6 +8,7 @@ import { DotsSpinner } from '@/assets/spinner'
 import CircleSpinner from '@/assets/spinner/circle-spinner.vue'
 import { useIntersectionObserver } from '@/hooks/intersection-observer'
 
+import { POKEMON_CONTEXT } from '../config'
 import type { usePokemon } from '../hooks/use-pokemon'
 import PokemonCard from './pokemon-card.vue'
 import PokemonFilter from './pokemon-filter.vue'
@@ -27,7 +28,7 @@ const {
   selectedCatchedType,
   selectedCatchedOrder,
   handleSelectFilter,
-} = inject('pokemonContext') as ReturnType<typeof usePokemon>
+} = inject(POKEMON_CONTEXT) as ReturnType<typeof usePokemon>
 
 const loadMoreCatched = ref<HTMLDivElement>()
 

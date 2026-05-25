@@ -5,24 +5,34 @@ import type { Pokemon } from '@/features/main/types'
 
 export const usePokemonStore = defineStore('pokemon', () => {
   const favorites = ref<Pokemon[]>(JSON.parse(localStorage.getItem('fav-pokemons') || '[]'))
-  const catched = ref<Pokemon[]>([])
+  const catches = ref<Pokemon[]>([])
+  const favorite = ref<Pokemon>()
+  const catched = ref<Pokemon>()
 
-  const addToFavorite = (pokemon: Pokemon) => {
+  const addToFavorites = (pokemon: Pokemon) => {
     if (favorites.value.find(p => p.id === pokemon.id)) return
     favorites.value.push(pokemon)
   }
 
-  const removeFromFavorite = (id: string) => {
+  const removeFromFavorites = (id: string) => {
     favorites.value = favorites.value.filter(p => p.id !== id)
   }
 
-  const addToCatched = (pokemon: Pokemon) => {
-    if (catched.value.find(p => p.id === pokemon.id)) return
-    catched.value.push(pokemon)
+  const addToCatches = (pokemon: Pokemon) => {
+    if (catches.value.find(p => p.id === pokemon.id)) return
+    catches.value.push(pokemon)
   }
 
-  const removeFromCatched = (id: string) => {
-    catched.value = catched.value.filter(p => p.id !== id)
+  const removeFromCatches = (id: string) => {
+    catches.value = catches.value.filter(p => p.id !== id)
+  }
+
+  const updateFavorite = (pokemon: Pokemon) => {
+    favorite.value = pokemon
+  }
+
+  const updateCatched = (pokemon: Pokemon) => {
+    catched.value = pokemon
   }
 
   watch(
@@ -35,10 +45,14 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   return {
     favorites,
+    catches,
+    favorite,
     catched,
-    addToFavorite,
-    removeFromFavorite,
-    addToCatched,
-    removeFromCatched,
+    addToFavorites,
+    removeFromFavorites,
+    addToCatches,
+    removeFromCatches,
+    updateCatched,
+    updateFavorite,
   }
 })

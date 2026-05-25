@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "check": "if [ \"$CI\" != \"true\" ]; then check-node-version --node \">=20\"; fi",
+    "check": "is-ci || check-node-version --node \">=20\"",
     "dev": "npm run check && vite --host",
     "build": "npm run check && vue-tsc -b && vite build",
     "build:analyze": "npm run check && vite build --mode analyze",
@@ -46,6 +46,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.3.0",
     "eslint-plugin-vue": "^10.6.2",
+    "is-ci": "^4.1.0",
     "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.7.4",

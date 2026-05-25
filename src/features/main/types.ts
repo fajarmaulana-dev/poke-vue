@@ -8,18 +8,18 @@ export type Pokemon = {
   spreads: string[]
 }
 
-export type Favourite = {
+export type Favorite = {
   id: string
   state: boolean
   date: string
 }
 
-export type MyPokemon = Omit<Favourite, 'state'>
+export type MyPokemon = Omit<Favorite, 'state'>
 
 export type PokemonCard = Omit<Pokemon, 'spreads'> & {
   catch_date?: string
-  with_favourite?: boolean
-  favourite_date?: string
+  with_favorite?: boolean
+  favorite_date?: string
   removable?: boolean
 }
 
@@ -51,7 +51,7 @@ export interface PokemonFilterEmits {
 }
 
 export interface PokemonCardEmits {
-  (e: 'favourite', id: string): void
-  (e: 'remove', id: string): void
+  (e: 'favorite', id: string): void
+  (e: 'remove', pokemon: Pokemon): void
   (e: 'open', id: string): void
 }
