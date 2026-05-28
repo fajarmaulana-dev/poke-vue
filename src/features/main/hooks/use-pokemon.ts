@@ -75,6 +75,14 @@ export const usePokemon = () => {
     { deep: true },
   )
 
+  watch(
+    () => pokemonStore.favorites,
+    () => {
+      fetchFilteredData('f')
+    },
+    { deep: true },
+  )
+
   const debouncedUpdateQuery = useDebounceFunc(updateQuery, 750)
 
   const updateFilter = (newFilter: Record<string, string>) => {
@@ -89,9 +97,31 @@ export const usePokemon = () => {
 
   const getData = async (ids: string[]) => {
     if (!ids.length) return []
+
+    const foundDataMap = new Map<string, Pokemon>()
+    pokemonStore.favorites.forEach(p => foundDataMap.set(p.id, p))
+    pokemons.value.forEach(p => foundDataMap.set(p.id, p))
+    catches.value.forEach(p => foundDataMap.set(p.id, p))
+
+    const missingIds: string[] = []
+    const results: Pokemon[] = []
+
+    ids.forEach(id => {
+      const cached = foundDataMap.get(id)
+      if (cached) {
+        results.push(cached)
+      } else {
+        missingIds.push(id)
+      }
+    })
+
+    if (missingIds.length === 0) {
+      return ids.map(id => foundDataMap.get(id)!)
+    }
+
     try {
-      const pokemons = await mutatePokemon(ids.map(id => `/pokemon/${parseInt(id)}`))
-      return pokemons.reduce((acc: Pokemon[], { data }) => {
+      const response = await mutatePokemon(missingIds.map(id => `/pokemon/${parseInt(id)}`))
+      const fetchedPokemons = response.reduce((acc: Pokemon[], { data }) => {
         const { id, name, sprites, types: detailTypes } = data
         const image = sprites.front_default
         const poketypes = detailTypes.map(d => d.type.name)
@@ -107,6 +137,11 @@ export const usePokemon = () => {
         }
         return acc
       }, [])
+
+      const allFound = [...results, ...fetchedPokemons]
+      const allFoundMap = new Map(allFound.map(p => [p.id, p]))
+
+      return ids.map(id => allFoundMap.get(id)).filter((p): p is Pokemon => !!p)
     } catch {
       clickById(ERROR_TOAST_ID)
       return []

@@ -33,7 +33,7 @@ const contentAttrs = computed(() => {
     <input v-bind="contentAttrs" :id="id" class="hidden peer" type="checkbox" @change="toggleToast" />
     <div
       :class="[
-        `absolute border right-0 bottom-6 max-w-80 p-3 flex gap-2 rounded-lg transition-transform ease duration-300
+        `absolute border right-0 bottom-6 max-w-80 p-3 flex gap-2 rounded-xl transition-transform ease duration-300
         translate-x-full peer-checked:-translate-x-6 delay-200`,
         styleByType({ type: props.type }),
       ]"

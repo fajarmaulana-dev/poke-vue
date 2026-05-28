@@ -17,6 +17,7 @@ export type Favorite = {
 export type MyPokemon = Omit<Favorite, 'state'>
 
 export type PokemonCard = Omit<Pokemon, 'spreads'> & {
+  loading?: boolean
   catch_date?: string
   with_favorite?: boolean
   favorite_date?: string

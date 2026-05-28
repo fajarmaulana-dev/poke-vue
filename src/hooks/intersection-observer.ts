@@ -1,5 +1,5 @@
+import { type Ref } from '@vue/reactivity'
 import { onMounted, onUnmounted } from '@vue/runtime-core'
-import { type Ref } from 'vue'
 
 /**
  * A reusable hook to observe one or more elements using IntersectionObserver.

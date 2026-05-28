@@ -53,14 +53,16 @@ const contentAttrs = computed(() => {
       role="button"
       :tabindex="0"
       :class="[
-        `absolute z-50 pointer-events-auto bottom-0 left-0 translate-y-full transition-transform ease bg-white w-full
-        shadow-blur-y-inv-4 shadow-black/10 rounded-t-4xl pt-7 after:absolute after:w-16 after:h-1.5 after:rounded-full
-        after:bg-gray-400/60 after:top-3 after:left-1/2 after:-translate-x-1/2 opacity-0 will-change-transform`,
+        `absolute z-50 pointer-events-none bottom-0 left-0 translate-y-full transition-transform sm:transition-opacity
+        ease bg-white w-full shadow-blur-y-inv-4 shadow-black/10 pt-4 rounded-t-4xl after:pointer-events-none
+        after:absolute after:w-16 after:h-1.5 after:rounded-full after:bg-gray-400/60 after:top-3 after:left-1/2
+        after:-translate-x-1/2 opacity-0 will-change-transform peer-has-checked:pointer-events-auto sm:cursor-default`,
         !mobileOnly
           ? `sm:relative sm:translate-y-0! sm:opacity-0! sm:peer-has-checked:opacity-100!
             sm:peer-has-checked:pointer-events-auto sm:shadow-none sm:rounded-3xl sm:after:hidden sm:p-0`
           : '',
-        grab ? 'cursor-grabbing duration-0' : 'cursor-grab duration-300 peer-has-checked:translate-y-0!',
+        grab ? 'cursor-grabbing duration-0' : 'cursor-grab duration-300',
+        'peer-has-checked:translate-y-0!',
         $attrs.class,
       ]"
       @mousedown="e => handleAction({ e, axis: 'Y' }, 'start')"

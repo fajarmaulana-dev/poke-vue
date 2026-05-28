@@ -2,7 +2,9 @@
 import { Heart, Pokeball, TrashSolid } from '@iconoir/vue'
 import { computed, ref } from '@vue/reactivity'
 
+import { CircleSpinner } from '@/assets/spinner'
 import { useSlider } from '@/hooks/slider'
+import { ripple } from '@/utils/ripple'
 
 import { TYPE_ICONS } from '../config'
 import type { PokemonCard, PokemonCardEmits } from '../types'
@@ -57,8 +59,14 @@ const movementStyle = computed(() => {
       @touchend.passive="e => handleAction({ e, axis: 'X' }, 'end', !removable)"
       @click="() => emit('open', id)"
     >
-      <div class="p-4 overflow-hidden">
-        <b class="text-sm xs:text-base font-semibold md:text-sm lg:text-base">No. {{ id }}</b>
+      <button :disabled="loading" class="text-left relative p-4 overflow-hidden flex-1" @click="ripple">
+        <div class="flex items-center gap-1.5">
+          <b class="text-sm xs:text-base font-semibold md:text-sm lg:text-base">No. {{ id }}</b>
+          <CircleSpinner
+            v-if="loading"
+            class="size-4! border-slate-800! border-t-slate-800/10! border-b-slate-800/10!"
+          />
+        </div>
         <strong
           class="font-bold text-base xs:text-lg md:text-base lg:text-lg xl:text-xl mb-3 capitalize truncate block"
           >{{ name }}</strong
@@ -78,7 +86,7 @@ const movementStyle = computed(() => {
             }}</span>
           </div>
         </div>
-      </div>
+      </button>
       <div
         class="relative grid place-items-center h-32 min-w-32 lg:min-w-36 rounded-2xl"
         :class="TYPE_ICONS[types[0]].bg"

@@ -1,4 +1,5 @@
-import { onUnmounted, type Ref, watchEffect } from 'vue'
+import { type Ref } from '@vue/reactivity'
+import { onUnmounted, watch } from '@vue/runtime-core'
 
 import { MOBILE_BOUND } from '@/constants'
 import { useSlider } from '@/hooks/slider'
@@ -12,10 +13,10 @@ export interface Pane {
   onHidden?: (event: Event) => void
 }
 
-export const usePane = ({ id, mobileOnly, onHidden, onShown, scrollTarget }: Pane) => {
+export const usePane = ({ id, onHidden, onShown, scrollTarget }: Pane) => {
   const { handleAction, movement, grab } = useSlider({
     data: [],
-    mobileOnly,
+    mobileOnly: true,
     onBack: () => clickById(id),
   })
 
@@ -26,14 +27,14 @@ export const usePane = ({ id, mobileOnly, onHidden, onShown, scrollTarget }: Pan
     if (!pane) return
     if (!target.checked) {
       if (window.innerWidth < MOBILE_BOUND) {
-        pane.style.transform = 'translateY(100%)'
+        pane.style.transform = ''
         document.documentElement.style.overflow = 'auto'
       }
       onHidden?.(e)
       return
     }
 
-    pane.style.transform = 'translateY(0)'
+    pane.style.transform = ''
     if (window.innerWidth < MOBILE_BOUND) {
       document.documentElement.style.overflow = 'hidden'
       pane.style.opacity = '1'
@@ -41,31 +42,44 @@ export const usePane = ({ id, mobileOnly, onHidden, onShown, scrollTarget }: Pan
     onShown?.(e)
   }
 
-  let frame: number
-  const cleanup = watchEffect(onCleanup => {
-    if (window.innerWidth < MOBILE_BOUND) {
-      const update = () => {
-        const pane = getById(`pane-${id}`)
-        if (!pane) return
+  watch([grab, movement], ([isGrabbing, move]) => {
+    if (window.innerWidth >= MOBILE_BOUND) return
+    const pane = getById(`pane-${id}`)
+    if (!pane) return
 
-        const isAtTop = !scrollTarget?.value || scrollTarget.value.scrollTop === 0
-        if (grab.value && isAtTop) {
-          const yMove = movement.value > 0 ? movement.value : 0
-          pane.style.transform = `translateY(${yMove}px)`
-        }
-        frame = requestAnimationFrame(update)
+    if (isGrabbing) {
+      const isAtTop = !scrollTarget?.value || scrollTarget.value.scrollTop === 0
+      if (isAtTop) {
+        const yMove = move > 0 ? move : 0
+        pane.style.transform = `translateY(${yMove}px)`
       }
-
-      update()
-      onCleanup(() => {
-        if (frame) cancelAnimationFrame(frame)
-      })
+      return
     }
+    pane.style.transform = ''
   })
 
+  const mediaQuery = window.matchMedia(`(min-width: ${MOBILE_BOUND}px)`)
+
+  const onBreakpointChange = () => {
+    const pane = getById(`pane-${id}`)
+    if (!pane) return
+
+    const label = pane.previousElementSibling as HTMLElement | null
+    pane.style.transition = 'none'
+    if (label) label.style.transition = 'none'
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        pane.style.transition = ''
+        if (label) label.style.transition = ''
+      })
+    })
+  }
+
+  mediaQuery.addEventListener('change', onBreakpointChange)
+
   onUnmounted(() => {
-    cleanup()
-    if (frame) cancelAnimationFrame(frame)
+    mediaQuery.removeEventListener('change', onBreakpointChange)
   })
 
   return {
