@@ -28,8 +28,7 @@ const { currentProfilePosition } = inject(POKEMON_CONTEXT) as ReturnType<typeof 
 
 <template>
   <div
-    class="fixed sm:absolute flex inset-0 bottom-13 xs:bottom-15 sm:bottom-0 bg-white z-3 rounded-xl overflow-hidden
-      transition-transform duration-300"
+    class="fixed sm:absolute flex inset-0 bg-white z-3 rounded-xl overflow-hidden transition-transform duration-300"
     :class="currentProfilePosition"
   >
     <FormWrapper

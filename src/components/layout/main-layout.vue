@@ -21,7 +21,9 @@ const isSelected = (name: string) => {
   const { query, path } = currentRoute.value
   return query.page === name.toLowerCase() || (path === '/' && !query.page && name === FOOTER_MENUS[0].name)
 }
-const noCenter = computed(() => (route.query.page === 'wilayah' && !route.query.region_p) || route.query.is_profile)
+const noCenter = computed(
+  () => (route.query.page === 'wilayah' && !route.query.region_p) || route.query.filter || route.query.is_profile,
+)
 
 const handleUpdateMenu = (idx: number, name: string) => {
   if (isCenter(idx)) {
@@ -48,7 +50,9 @@ const removeFromFavorites = () => {
   <main>
     <footer
       style="view-transition-name: layout-footer"
-      class="fixed sm:hidden bottom-0 bg-white shadow-blur-y-inv-1 shadow-gray-200 w-full px-mobile rounded-t-5 z-10"
+      class="fixed sm:hidden bottom-0 bg-white shadow-blur-y-inv-1 shadow-gray-200 w-full px-mobile rounded-t-5 z-10
+        transition-transform duration-300"
+      :class="{ 'translate-y-full sm:translate-y-0': route.query.filter || route.query.is_profile }"
     >
       <div class="flex items-center justify-around h-13 xs:h-15">
         <button
@@ -99,6 +103,7 @@ const removeFromFavorites = () => {
     <div class="flex-1 overflow-hidden" style="view-transition-name: layout-content">
       <router-view />
     </div>
+    <!-- <PokemonDetail /> -->
     <Toast :id="ERROR_TOAST_ID" :type="EStatus.Error">
       Gagal mengambil data Pokemon. Silakan periksa koneksi internet Anda atau coba lagi nanti.
     </Toast>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Search } from '@iconoir/vue'
+import { useRoute } from 'vue-router'
 
 import { DropDown, FormInput } from '@/components/common'
 
@@ -8,6 +9,8 @@ import type { PokemonFilterEmits, PokemonFilterProps } from '../types'
 
 defineProps<PokemonFilterProps>()
 const emit = defineEmits<PokemonFilterEmits>()
+
+const route = useRoute()
 </script>
 
 <template>
@@ -30,7 +33,8 @@ const emit = defineEmits<PokemonFilterEmits>()
       <DropDown
         :model-value="typeValue"
         :name="`filter-${prefix}-${suffix || ''}`"
-        class="grow z-5"
+        class="grow z-5 sm:*:nth-2:block"
+        :class="{ '*:nth-2:hidden': !route.query.filter }"
         show-value
         :options="FILTER_OPTIONS"
         label-class="nth-2:bg-grass-1/50 nth-2:hover:bg-grass-1/60 nth-2:active:bg-grass-1/70
@@ -63,7 +67,8 @@ const emit = defineEmits<PokemonFilterEmits>()
       <DropDown
         :model-value="orderValue"
         :name="`sort-${prefix}-${suffix || ''}`"
-        class="grow"
+        class="grow sm:*:nth-2:block"
+        :class="{ '*:nth-2:hidden': !route.query.filter }"
         :options="SORT_OPTIONS"
         :is-loading="isLoading && loadingFor === `order_${prefix}`"
         @input="e => emit('filter', { e, type: `order_${prefix}` })"

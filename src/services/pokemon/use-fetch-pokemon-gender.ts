@@ -1,6 +1,6 @@
 import { pokeApi } from '../instance'
 
-export type PokemonGendeResponse = {
+export type PokemonGenderResponse = {
   pokemon_species_details: {
     pokemon_species: { name: string }
     rate: number
@@ -8,7 +8,7 @@ export type PokemonGendeResponse = {
 }
 
 export const useFetchPokemonGender = () => {
-  const { mutate, isLoading, error } = pokeApi.batch<PokemonGendeResponse[]>([1, 2, 3].map(i => `/gender/${i}`))
+  const { mutate, isLoading, error } = pokeApi.batch<PokemonGenderResponse[]>([1, 2, 3].map(i => `/gender/${i}`))
 
   return {
     mutatePokemonGender: mutate,

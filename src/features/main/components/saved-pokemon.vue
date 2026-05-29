@@ -62,9 +62,11 @@ useIntersectionObserver(loadMoreCatched, () => {
         />
       </div>
       <div
-        class="overflow-y-auto poke-cards poke-cards-c mt-16 p-4 pb-18 sm:mt-0 sm:p-4! max-h-[calc(100vh-124px)]
-          sm:max-h-none"
-        :class="{ 'flex-1 flex items-center justify-center': isLoading || !catches.length }"
+        class="overflow-y-auto poke-cards poke-cards-c mt-16 p-4 pb-18 sm:mt-0 sm:p-4! sm:max-h-none"
+        :class="[
+          { 'flex-1 flex items-center justify-center': isLoading || !catches.length },
+          route.query.filter ? 'max-h-screen' : 'max-h-[calc(100vh-124px)]',
+        ]"
       >
         <div v-if="isLoading || !catches.length" class="w-full flex justify-center items-center flex-col gap-6">
           <img

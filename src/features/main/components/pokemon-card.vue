@@ -28,10 +28,7 @@ const movementStyle = computed(() => {
     if (movement.value >= 64) translation = 64
     if (!cardRef.value?.classList.contains('-translate-x-16') && movement.value > 0) translation = 0
   }
-  return {
-    transform: `translateX(${translation}px)`,
-    cursor: grab.value ? 'grabbing' : 'pointer',
-  }
+  return { transform: `translateX(${translation}px)` }
 })
 </script>
 
@@ -59,8 +56,13 @@ const movementStyle = computed(() => {
       @touchend.passive="e => handleAction({ e, axis: 'X' }, 'end', !removable)"
       @click="() => emit('open', id)"
     >
-      <button :disabled="loading" class="text-left relative p-4 overflow-hidden flex-1" @click="ripple">
-        <div class="flex items-center gap-1.5">
+      <button
+        :disabled="loading"
+        class="text-left relative p-4 overflow-hidden flex-1"
+        :class="removable && grab && Math.abs(movement) > 1 ? 'cursor-grabbing!' : ''"
+        @click="ripple"
+      >
+        <div class="flex items-center gap-1.5 relative z-1">
           <b class="text-sm xs:text-base font-semibold md:text-sm lg:text-base">No. {{ id }}</b>
           <CircleSpinner
             v-if="loading"
@@ -68,10 +70,11 @@ const movementStyle = computed(() => {
           />
         </div>
         <strong
-          class="font-bold text-base xs:text-lg md:text-base lg:text-lg xl:text-xl mb-3 capitalize truncate block"
+          class="relative z-1 font-bold text-base xs:text-lg md:text-base lg:text-lg xl:text-xl mb-3 capitalize truncate
+            block"
           >{{ name }}</strong
         >
-        <div class="flex gap-2 items-center">
+        <div class="relative z-1 flex gap-2 items-center">
           <div
             v-for="type in types"
             :key="type"
@@ -89,7 +92,7 @@ const movementStyle = computed(() => {
       </button>
       <div
         class="relative grid place-items-center h-32 min-w-32 lg:min-w-36 rounded-2xl"
-        :class="TYPE_ICONS[types[0]].bg"
+        :class="[TYPE_ICONS[types[0]].bg, removable ? (grab ? 'cursor-grabbing' : 'cursor-grab') : '']"
       >
         <component :is="TYPE_ICONS[types[0]].icon" :size="112" class="pointer-events-none" />
         <div class="absolute inset-0 grid place-items-center pointer-events-none">

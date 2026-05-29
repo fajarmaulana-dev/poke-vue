@@ -53,12 +53,12 @@ useIntersectionObserver([loadMorePokemon, loadMorePokemonByRegion], () => {
 
 <template>
   <div
-    class="bg-white relative z-3 flex flex-col sm:rounded-2xl h-[calc(100vh-52px)] xs:h-[calc(100vh-60px)]
-      sm:h-[calc(100vh-40px)] shrink-0 sm:shrink w-full sm:w-1/2 md:w-2/3 shadow-blur-10 shadow-gray-200/40
-      overflow-hidden"
+    class="bg-white relative z-3 flex flex-col sm:rounded-2xl sm:h-[calc(100vh-40px)] shrink-0 sm:shrink w-full sm:w-1/2
+      md:w-2/3 shadow-blur-10 shadow-gray-200/40 overflow-hidden"
+    :class="[route.query.filter ? 'h-screen' : 'h-[calc(100vh-52px)] xs:h-[calc(100vh-60px)]']"
   >
     <router-link
-      class="fixed inset-0 bg-black/30 z-2 transition-opacity duration-300"
+      class="fixed inset-0 bg-black/30 sm:opacity-0 z-2 transition-opacity duration-300"
       :class="[currentHeaderPosition, { 'opacity-0 pointer-events-none': !route.query.filter }]"
       aria-label="filter-layer"
       :to="{ path: '/', query: { ...route.query, filter: undefined }, replace: true }"
@@ -211,8 +211,11 @@ useIntersectionObserver([loadMorePokemon, loadMorePokemonByRegion], () => {
     </div>
     <div
       ref="pokemonByRegion"
-      class="overflow-y-auto h-[calc(100vh-120px)] min-w-full p-4 mt-16 sm:mt-0 poke-cards poke-cards-p"
-      :class="{ 'flex-1 flex items-center justify-center': isLoading || !pokemons.length }"
+      class="overflow-y-auto min-w-full p-4 mt-16 sm:mt-0 poke-cards poke-cards-p"
+      :class="[
+        { 'flex-1 flex items-center justify-center': isLoading || !pokemons.length },
+        route.query.filter ? 'h-[calc(100vh-64px)]' : 'h-[calc(100vh-120px)]',
+      ]"
     >
       <div v-if="isLoading || !pokemons.length" class="w-full flex justify-center items-center flex-col gap-6">
         <img

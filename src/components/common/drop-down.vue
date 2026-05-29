@@ -39,8 +39,8 @@ const containerAttrs = computed(() => ({
         duration-300"
       :disabled="isLoading"
     >
-      <span class="block text-center w-full">{{ selectedText }}</span>
-      <CircleSpinner v-if="isLoading" class="border-slate-600! border-b-neutral-200! min-w-4.5 size-4.5!" />
+      <span class="block text-center w-full min-w-25">{{ selectedText }}</span>
+      <CircleSpinner v-if="isLoading" class="border-slate-600! border-b-neutral-200! min-w-5 size-5!" />
       <NavArrowDown v-else class="min-w-5 h-auto stroke-3 **:stroke-slate-800" />
     </button>
     <div
